@@ -1,5 +1,11 @@
-import streamlit as st
+import os
+import sys
 import datetime
+import streamlit as st
+
+# Resolve project root path for remote environments
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 from frontend.utils import session, api_client, theme
 
 st.set_page_config(
@@ -21,8 +27,8 @@ if not session.is_logged_in():
     
     with tab1:
         st.markdown("### Login to Your Account")
-        email = st.text_input("Email Address", key="login_email")
-        password = st.text_input("Password", type="password", key="login_password")
+        email = st.text_input("Email Address", key="login_email", help="Enter your registered email address.")
+        password = st.text_input("Password", type="password", key="login_password", help="Enter your account password.")
         if st.button("Login", use_container_width=True):
             if session.login(email, password):
                 st.success("Successfully logged in! Head over to the Dashboard.")
@@ -32,11 +38,11 @@ if not session.is_logged_in():
                 
     with tab2:
         st.markdown("### Register New Student Account")
-        name = st.text_input("Full Name", key="reg_name")
-        reg_email = st.text_input("Email Address", key="reg_email")
-        reg_password = st.text_input("Password", type="password", key="reg_password")
-        exam_target = st.selectbox("Target Exam", ["JEE Main", "NEET UG", "CUET UG", "CAT", "GATE", "UPSC", "Boards", "Other"])
-        exam_date = st.date_input("Exam Date", datetime.date.today() + datetime.timedelta(days=120))
+        name = st.text_input("Full Name", key="reg_name", help="Enter your full name.")
+        reg_email = st.text_input("Email Address", key="reg_email", help="Enter a valid email address.")
+        reg_password = st.text_input("Password", type="password", key="reg_password", help="Create a secure password.")
+        exam_target = st.selectbox("Target Exam", ["JEE Main", "NEET UG", "CUET UG", "CAT", "GATE", "UPSC", "Boards", "Other"], help="Select the target examination you are preparing for.")
+        exam_date = st.date_input("Exam Date", datetime.date.today() + datetime.timedelta(days=120), help="Select the scheduled or expected date of the examination.")
         
         if st.button("Register", use_container_width=True):
             exam_datetime = datetime.datetime.combine(exam_date, datetime.time.min).isoformat()

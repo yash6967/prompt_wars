@@ -3,8 +3,7 @@ from typing import Optional, List
 from datetime import datetime
 
 class ORMBase(BaseModel):
-    class Config:
-        from_attributes = True
+    model_config = {"from_attributes": True}
 
 class Token(ORMBase):
     access_token: str

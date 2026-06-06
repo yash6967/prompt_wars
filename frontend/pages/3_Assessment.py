@@ -1,5 +1,11 @@
+import os
+import sys
 import streamlit as st
 import json
+
+# Resolve project root path for remote environments
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
+
 from frontend.utils import session, api_client, theme
 
 st.set_page_config(page_title="Wellness Assessment — Saathi", layout="wide")
@@ -63,7 +69,8 @@ with st.form("assessment_form"):
                 f"**{q['id']}. {q['text']}**",
                 options=list(options_map.keys()),
                 index=0,
-                key=f"q_{q['id']}"
+                key=f"q_{q['id']}",
+                help="Select the frequency matching your mood over the past two weeks."
             )
             answers[str(q["id"])] = options_map[ans]
             st.markdown("<br>", unsafe_allow_html=True)
@@ -77,7 +84,8 @@ with st.form("assessment_form"):
                 f"**{q['id']}. {q['text']}**",
                 options=list(options_map.keys()),
                 index=0,
-                key=f"q_{q['id']}"
+                key=f"q_{q['id']}",
+                help="Select the frequency matching your stress response over the past two weeks."
             )
             answers[str(q["id"])] = options_map[ans]
             st.markdown("<br>", unsafe_allow_html=True)
@@ -91,13 +99,14 @@ with st.form("assessment_form"):
                 f"**{q['id']}. {q['text']}**",
                 options=list(pss_options_map.keys()),
                 index=0,
-                key=f"q_{q['id']}"
+                key=f"q_{q['id']}",
+                help="Select the frequency matching your perceived coping capability over the past month."
             )
             answers[str(q["id"])] = pss_options_map[ans]
             st.markdown("<br>", unsafe_allow_html=True)
             
     st.markdown("---")
-    submitted = st.form_submit_button("Submit Assessment & Calculate Results", use_container_width=True)
+    submitted = st.form_submit_button("Submit Assessment & Calculate Results", use_container_width=True, help="Calculate your mood, anxiety, and perceived stress score index.")
     
     if submitted:
         payload = {

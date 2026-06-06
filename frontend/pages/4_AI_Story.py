@@ -1,4 +1,10 @@
+import os
+import sys
 import streamlit as st
+
+# Resolve project root path for remote environments
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
+
 from frontend.utils import session, api_client, theme
 
 st.set_page_config(page_title="AI Wellness Mirror — Saathi", layout="wide")
@@ -11,7 +17,7 @@ if not session.is_logged_in():
 st.title("📖 Relatable Narrative Mirror")
 st.markdown("We generate unique, perspective-shifting stories tailored to your exact target exam goals and recent mood self-reports.")
 
-if st.button("Generate My Preparation Journey Story", use_container_width=True):
+if st.button("Generate My Preparation Journey Story", use_container_width=True, help="Generates an encouraging short story based on your target exam and latest mood logs."):
     with st.spinner("Generating your story..."):
         res = api_client.request("GET", "ai/story")
         if res and res.status_code == 200:

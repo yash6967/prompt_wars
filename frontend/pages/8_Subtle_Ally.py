@@ -1,5 +1,11 @@
+import os
+import sys
 import streamlit as st
 from datetime import datetime
+
+# Resolve project root path for remote environments
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
+
 from frontend.utils import session, api_client, theme
 
 st.set_page_config(page_title="Subtle Ally Connections — Saathi", layout="wide")
@@ -26,9 +32,9 @@ with tab1:
     st.markdown("Invite a mentor, guardian, or parent to receive wellness indicators.")
     
     with st.form("invite_ally_form"):
-        ally_name = st.text_input("Ally Full Name:")
-        ally_email = st.text_input("Ally Email Address:")
-        role = st.selectbox("Role / Relationship:", ["Parent", "Teacher", "Mentor", "Sibling", "Friend", "Other"])
+        ally_name = st.text_input("Ally Full Name:", help="Enter the full name of the trusted guardian or educator you want to link.")
+        ally_email = st.text_input("Ally Email Address:", help="Enter the email address of the guide to send notifications.")
+        role = st.selectbox("Role / Relationship:", ["Parent", "Teacher", "Mentor", "Sibling", "Friend", "Other"], help="Select the relationship role of the guide.")
         
         submitted = st.form_submit_button("Link Ally")
         if submitted:

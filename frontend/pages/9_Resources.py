@@ -1,4 +1,10 @@
+import os
+import sys
 import streamlit as st
+
+# Resolve project root path for remote environments
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
+
 from frontend.utils import session, theme
 
 st.set_page_config(page_title="Helplines & Resources — Saathi", layout="wide")

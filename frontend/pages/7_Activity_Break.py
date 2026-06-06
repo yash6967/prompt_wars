@@ -1,6 +1,12 @@
+import os
+import sys
 import streamlit as st
 import time
 from datetime import datetime
+
+# Resolve project root path for remote environments
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
+
 from frontend.utils import session, api_client, theme
 
 st.set_page_config(page_title="Active Break Tracker — Saathi", layout="wide")
@@ -38,7 +44,7 @@ col_timer, col_log = st.columns(2)
 
 with col_timer:
     st.subheader("⏱️ Quick Break Timer")
-    timer_type = st.selectbox("Choose break type:", ["Hydration Break (2 min)", "Breathing Exercise (5 min)", "Short Walk (10 min)", "Meditation (15 min)"])
+    timer_type = st.selectbox("Choose break type:", ["Hydration Break (2 min)", "Breathing Exercise (5 min)", "Short Walk (10 min)", "Meditation (15 min)"], help="Select a type of active break to start a visual countdown timer.")
     
     duration_map = {
         "Hydration Break (2 min)": 2,
@@ -93,10 +99,11 @@ with col_log:
     with st.form("manual_break_form"):
         activity_type = st.selectbox(
             "What activity did you do?",
-            ["exercise", "meditation", "social", "hydration", "nap", "hobbies"]
+            ["exercise", "meditation", "social", "hydration", "nap", "hobbies"],
+            help="Select the category of break activity completed."
         )
-        duration = st.number_input("Duration (minutes):", min_value=1, max_value=120, value=10)
-        description = st.text_input("Short Description:", placeholder="E.g., Walked in park, drank 2 glasses of water")
+        duration = st.number_input("Duration (minutes):", min_value=1, max_value=120, value=10, help="Specify the duration of the break session in minutes.")
+        description = st.text_input("Short Description:", placeholder="E.g., Walked in park, drank 2 glasses of water", help="Add voluntary details about the break activity.")
         
         submitted = st.form_submit_button("Save Entry")
         if submitted:

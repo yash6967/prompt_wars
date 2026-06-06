@@ -285,7 +285,7 @@ STATUS: DONE
 TASK-025: End-to-End Core Automation Suite Execution
 DESCRIPTION: Launch programmatic diagnostic test cases verifying API endpoints process instructions securely according to schema parameters.
 STEPS:
-  - Create integration verification scripts at `backend/test_suite.py` executing programmatic user setups, data logging tests, privacy masking loops, and metric safety checks.
+  - Create integration verification scripts under `backend/tests/` executing programmatic user setups, data logging tests, privacy masking loops, and metric safety checks.
   - Ensure all database state interactions use explicit test entries that clear gracefully post-evaluation.
-VALIDATION: Run terminal instruction `python backend/test_suite.py` and confirm all internal validation test profiles succeed without exit warnings.
-STATUS: TODO
+VALIDATION: Run terminal instruction `python -m pytest backend/tests/` and confirm all internal validation test profiles succeed without exit warnings.
+STATUS: DONE

@@ -1,6 +1,12 @@
+import os
+import sys
 import streamlit as st
 import pandas as pd
 from datetime import datetime
+
+# Resolve project root path for remote environments
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
+
 from frontend.utils import session, api_client, theme
 
 st.set_page_config(page_title="Exam Calendar — Saathi", layout="wide")
@@ -20,7 +26,7 @@ if target_exam:
     st.info(f"💡 Your selected target exam is **{target_exam}**. Focus on its milestone boundaries below.")
 
 # Filtering input
-days_filter = st.slider("Filter upcoming exams within the next (days):", min_value=30, max_value=365, value=120, step=30)
+days_filter = st.slider("Filter upcoming exams within the next (days):", min_value=30, max_value=365, value=120, step=30, help="Drag to adjust the time window (in days) for displaying upcoming national examinations.")
 
 with st.spinner("Fetching calendar dates..."):
     # Fetch upcoming exams

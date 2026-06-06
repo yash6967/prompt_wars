@@ -1,4 +1,10 @@
+import os
+import sys
 import streamlit as st
+
+# Resolve project root path for remote environments
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
+
 from frontend.utils import session, api_client, theme
 
 st.set_page_config(page_title="Check-In — Saathi")
@@ -14,14 +20,14 @@ st.markdown("Taking a moment to log how you feel helps visualize patterns and ke
 with st.form("check_in_form"):
     mood_score = st.slider("How is your mood today?", min_value=1, max_value=10, value=6, help="1 = Extremely low, 10 = Feeling amazing")
     energy_level = st.slider("What is your current energy level?", min_value=1, max_value=10, value=6, help="1 = Fully exhausted, 10 = Hyperactive & ready")
-    sleep_hours = st.number_input("How many hours did you sleep last night?", min_value=0.0, max_value=24.0, value=7.0, step=0.5)
-    study_hours = st.number_input("How many hours did you study today?", min_value=0.0, max_value=24.0, value=4.0, step=0.5)
+    sleep_hours = st.number_input("How many hours did you sleep last night?", min_value=0.0, max_value=24.0, value=7.0, step=0.5, help="Enter the approximate number of hours of sleep you had last night.")
+    study_hours = st.number_input("How many hours did you study today?", min_value=0.0, max_value=24.0, value=4.0, step=0.5, help="Enter the total hours spent studying today.")
     
     st.markdown("##### Emotion Tags")
     options = ["Anxious", "Stressed", "Calm", "Tired", "Motivated", "Bored", "Focused", "Happy", "Overwhelmed", "Excited"]
-    selected_tags = st.multiselect("Select emotions matching your current state:", options)
+    selected_tags = st.multiselect("Select emotions matching your current state:", options, help="Select one or more emotion tags that describe your mood.")
     
-    note = st.text_area("Write down any thoughts or journal notes:", placeholder="What is causing stress or helping you study today?")
+    note = st.text_area("Write down any thoughts or journal notes:", placeholder="What is causing stress or helping you study today?", help="Write any voluntary journal thoughts or daily updates to track stress causes.")
     
     submitted = st.form_submit_button("Submit Entry", use_container_width=True)
     if submitted:

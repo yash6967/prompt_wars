@@ -1,6 +1,12 @@
+import os
+import sys
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+
+# Resolve project root path for remote environments
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
+
 from frontend.utils import session, api_client, theme
 
 st.set_page_config(page_title="Dashboard — Saathi", layout="wide")
@@ -99,6 +105,19 @@ if history_res and history_res.status_code == 200:
             )
             fig_study.update_layout(template="simple_white", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', font_color="#2C2724")
             st.plotly_chart(fig_study, use_container_width=True)
+            
+        st.markdown("<br>", unsafe_allow_html=True)
+        with st.expander("👁️ View Text Alternative for Screen Readers & Low Bandwidth"):
+            st.markdown("### Daily Wellness Logs Summary Table")
+            summary_df = df[["logged_at", "mood_score", "energy_level", "sleep_hours", "study_hours"]].copy()
+            summary_df["logged_at"] = summary_df["logged_at"].dt.strftime("%Y-%m-%d")
+            st.dataframe(summary_df.rename(columns={
+                "logged_at": "Logged Date",
+                "mood_score": "Mood Score (1-10)",
+                "energy_level": "Energy Level (1-10)",
+                "sleep_hours": "Sleep (Hours)",
+                "study_hours": "Study (Hours)"
+            }), use_container_width=True, hide_index=True)
             
     else:
         st.info("Log your daily mood check-in to see wellness charts!")
