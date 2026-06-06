@@ -25,7 +25,7 @@ col1, col2 = st.columns(2)
 with col1:
     st.markdown(
         """
-        <div class="card-rose">
+        <div class="card-rose" role="region" aria-label="AASRA Helpline Support">
             <h3 style="margin: 0; font-size: 1.25rem;">🇮🇳 AASRA Helpline</h3>
             <p style="margin: 10px 0 0 0; font-size: 1.1rem;">📞 <b>+91-9820466726</b></p>
             <p style="margin: 5px 0 0 0; font-size: 0.9rem;">24/7 Free & Confidential Professional Support</p>
@@ -36,7 +36,7 @@ with col1:
 with col2:
     st.markdown(
         """
-        <div class="card-rose">
+        <div class="card-rose" role="region" aria-label="Kiran Mental Health Helpline Support">
             <h3 style="margin: 0; font-size: 1.25rem;">🇮🇳 Kiran Mental Health Helpline</h3>
             <p style="margin: 10px 0 0 0; font-size: 1.1rem;">📞 <b>1800-599-0019</b></p>
             <p style="margin: 5px 0 0 0; font-size: 0.9rem;">Government of India - 24/7 Mental Health Care Line</p>
@@ -55,7 +55,7 @@ col_habit1, col_habit2, col_habit3 = st.columns(3)
 with col_habit1:
     st.markdown(
         """
-        <div class="card-lavender">
+        <div class="card-lavender" role="region" aria-label="Study Smart Habits Guide">
             <h3 style="font-size: 1.25rem; margin-top: 0;">🧠 Study Smart (Pomodoro)</h3>
             <p>Don't sit for hours without rising. Divide study times into blocks:</p>
             <ul>
@@ -71,7 +71,7 @@ with col_habit1:
 with col_habit2:
     st.markdown(
         """
-        <div class="card-gold">
+        <div class="card-gold" role="region" aria-label="Sleep Hygiene Guide">
             <h3 style="font-size: 1.25rem; margin-top: 0;">💤 Sleep is Memory consolidation</h3>
             <p>Sacrificing sleep for studying reduces retention performance:</p>
             <ul>
@@ -87,7 +87,7 @@ with col_habit2:
 with col_habit3:
     st.markdown(
         """
-        <div class="card-sage">
+        <div class="card-sage" role="region" aria-label="Social Connection Guide">
             <h3 style="font-size: 1.25rem; margin-top: 0;">💬 Share the Load</h3>
             <p>Do not isolate yourself during your preparation weeks:</p>
             <ul>

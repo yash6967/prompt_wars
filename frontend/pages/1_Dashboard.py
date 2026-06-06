@@ -29,7 +29,7 @@ if escalation_res and escalation_res.status_code == 200:
     if escalation_data.get("escalation_required"):
         st.markdown(
             f"""
-            <div class="card-rose">
+            <div class="card-rose" role="alert" aria-live="assertive" aria-atomic="true" aria-label="Student Safety Escalation Alert">
                 <h3 style="color: inherit; margin-top: 0;">{t("urgent_escalation")}</h3>
                 <p>{t("escalation_p1")}</p>
                 <p><b>{t("flagged_reasons")}</b></p>

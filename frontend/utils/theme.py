@@ -30,6 +30,7 @@ def setup_page_theme():
             st.session_state["language"] = language
             st.rerun()
             
+    lang_code = "hi" if st.session_state["language"] == "Hindi (हिन्दी)" else "en"
     is_dark = st.session_state["theme_mode"] == "Dark"
     
     if is_dark:
@@ -206,6 +207,13 @@ def setup_page_theme():
             border-radius: 8px !important;
         }}
         </style>
+        
+        <script>
+            document.documentElement.lang = "{lang_code}";
+            if (window.parent && window.parent.document) {{
+                window.parent.document.documentElement.lang = "{lang_code}";
+            }}
+        </script>
         """,
         unsafe_allow_html=True
     )

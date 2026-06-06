@@ -68,7 +68,7 @@ else:
     prep_helper_lbl = "आपका तैयारी सहायक सक्रिय है। सभी सुविधाओं तक पहुँचने के लिए साइडबार नेविगेशन पर जाएँ:" if st.session_state.get("language") == "Hindi (हिन्दी)" else "Your preparation helper is active. Head to the sidebar navigation to access all features:"
     
     features_html = f"""
-        <div class="card-lavender">
+        <div class="card-lavender" role="region" aria-label="Target Exam & Features Directory">
             <h4>{target_exam_lbl}</h4>
             <p>{prep_helper_lbl}</p>
             <ul>
