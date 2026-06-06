@@ -7,6 +7,7 @@ import json
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 
 from frontend.utils import session, api_client, theme
+from frontend.utils.translations import t
 
 st.set_page_config(page_title="Wellness Assessment — Saathi", layout="wide")
 theme.setup_page_theme()
@@ -15,17 +16,8 @@ if not session.is_logged_in():
     st.warning("⚠️ Please login from the Home page first.")
     st.stop()
 
-st.title("📋 Wellness Assessment")
-st.markdown(
-    """
-    This non-clinical assessment combined of validated scales helps track your levels of:
-    - **PHQ-9** (Depression symptoms)
-    - **GAD-7** (Anxiety symptoms)
-    - **PSS-4** (Perceived stress scale)
-    
-    *Your answers are confidential. Take your time.*
-    """
-)
+st.title(t("assess_title"))
+st.markdown(t("assess_desc"))
 
 # Fetch questions from backend
 with st.spinner("Loading questionnaire..."):
@@ -36,19 +28,18 @@ with st.spinner("Loading questionnaire..."):
     questions = response.json()
 
 options_map = {
-    "Not at all": 0,
-    "Several days": 1,
-    "More than half the days": 2,
-    "Nearly every day": 3
+    t("opt_not_at_all"): 0,
+    t("opt_several_days"): 1,
+    t("opt_more_than_half"): 2,
+    t("opt_nearly_every_day"): 3
 }
 
 # Perceived Stress Scale questions have slightly different standard frequencies, but 0-3 scales map directly.
-# Let's show a user-friendly translation.
 pss_options_map = {
-    "Never": 0,
-    "Almost Never": 1,
-    "Sometimes": 2,
-    "Fairly Often": 3
+    t("opt_never"): 0,
+    t("opt_almost_never"): 1,
+    t("opt_sometimes"): 2,
+    t("opt_fairly_often"): 3
 }
 
 # Form for assessment input
@@ -62,11 +53,12 @@ with st.form("assessment_form"):
     pss_questions = [q for q in questions if q["category"] == "PSS"]
     
     if phq_questions:
-        st.header("Section 1: General Mood & Wellness (PHQ-9)")
-        st.caption("Over the last 2 weeks, how often have you been bothered by any of the following problems?")
+        st.header(t("assess_sec1"))
+        st.caption(t("assess_caption_2weeks"))
         for q in phq_questions:
+            q_text = t(f"q{q['id']}")
             ans = st.radio(
-                f"**{q['id']}. {q['text']}**",
+                f"**{q['id']}. {q_text}**",
                 options=list(options_map.keys()),
                 index=0,
                 key=f"q_{q['id']}",
@@ -77,11 +69,12 @@ with st.form("assessment_form"):
             
     if gad_questions:
         st.markdown("---")
-        st.header("Section 2: Anxiety & Stress Response (GAD-7)")
-        st.caption("Over the last 2 weeks, how often have you been bothered by any of the following problems?")
+        st.header(t("assess_sec2"))
+        st.caption(t("assess_caption_2weeks"))
         for q in gad_questions:
+            q_text = t(f"q{q['id']}")
             ans = st.radio(
-                f"**{q['id']}. {q['text']}**",
+                f"**{q['id']}. {q_text}**",
                 options=list(options_map.keys()),
                 index=0,
                 key=f"q_{q['id']}",
@@ -92,11 +85,12 @@ with st.form("assessment_form"):
 
     if pss_questions:
         st.markdown("---")
-        st.header("Section 3: Perceived Coping & Pressures (PSS-4)")
-        st.caption("In the last month, how often have you felt...")
+        st.header(t("assess_sec3"))
+        st.caption(t("assess_caption_month"))
         for q in pss_questions:
+            q_text = t(f"q{q['id']}")
             ans = st.radio(
-                f"**{q['id']}. {q['text']}**",
+                f"**{q['id']}. {q_text}**",
                 options=list(pss_options_map.keys()),
                 index=0,
                 key=f"q_{q['id']}",
@@ -106,7 +100,7 @@ with st.form("assessment_form"):
             st.markdown("<br>", unsafe_allow_html=True)
             
     st.markdown("---")
-    submitted = st.form_submit_button("Submit Assessment & Calculate Results", use_container_width=True, help="Calculate your mood, anxiety, and perceived stress score index.")
+    submitted = st.form_submit_button(t("assess_submit"), use_container_width=True, help="Calculate your mood, anxiety, and perceived stress score index.")
     
     if submitted:
         payload = {
@@ -115,7 +109,7 @@ with st.form("assessment_form"):
         res = api_client.request("POST", "assessment/", json_data=payload)
         if res and res.status_code == 200:
             result = res.json()
-            st.success("Assessment submitted successfully!")
+            st.success(t("assess_success"))
             
             # Show stress analysis breakdown card
             level = result["overall_level"].upper()
@@ -126,11 +120,15 @@ with st.form("assessment_form"):
             }
             card_class = card_classes.get(level, "card-lavender")
             
+            res_hdr = t("assess_result_hdr")
+            pressure_lbl = t("assess_pressure_lvl")
+            breakdown_lbl = t("assess_breakdown_lbl")
+            
             st.markdown(
                 f"""
                 <div class="{card_class}">
-                    <h3>Assessment Result: <span>{level} Pressure Level</span></h3>
-                    <p>Below is your wellness index breakdown:</p>
+                    <h3>{res_hdr}: <span>{level} {pressure_lbl}</span></h3>
+                    <p>{breakdown_lbl}</p>
                     <ul>
                         <li><b>PHQ-9 Score (Mood):</b> {result['phq_score']} / 27</li>
                         <li><b>GAD-7 Score (Anxiety):</b> {result['gad_score']} / 21</li>
@@ -142,10 +140,10 @@ with st.form("assessment_form"):
             )
             
             if level == "SEVERE":
-                st.warning("⚠️ Your results suggest severe pressure. We highly encourage talking to one of our listed advisors, or visiting the **Resources** and **Subtle Ally** sections.")
+                st.warning(t("assess_severe_warn"))
             elif level == "MODERATE":
-                st.info("💡 You are experiencing moderate stress. Consider scheduling regular activity breaks via the **Activity Break** page.")
+                st.info(t("assess_moderate_info"))
             else:
-                st.info("✨ Great job maintaining a low stress preparation routine! Continue logging your moods to track ongoing trends.")
+                st.info(t("assess_mild_info"))
         else:
             st.error("Failed to submit assessment. Please check backend log errors.")

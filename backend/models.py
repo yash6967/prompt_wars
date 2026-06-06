@@ -12,7 +12,7 @@ class User(Base):
     hashed_password = Column(String, nullable=False)
     exam_target = Column(String, nullable=True)
     exam_date = Column(DateTime, nullable=True)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.datetime.now(datetime.timezone.utc))
     is_active = Column(Boolean, default=True)
 
     moods = relationship("MoodEntry", back_populates="user", cascade="all, delete-orphan")
@@ -32,7 +32,7 @@ class MoodEntry(Base):
     energy_level = Column(Integer, nullable=True)
     sleep_hours = Column(Float, nullable=True)
     study_hours = Column(Float, nullable=True)
-    logged_at = Column(DateTime, default=datetime.datetime.utcnow, index=True)
+    logged_at = Column(DateTime, default=lambda: datetime.datetime.now(datetime.timezone.utc), index=True)
 
     user = relationship("User", back_populates="moods")
 
@@ -46,7 +46,7 @@ class AssessmentResult(Base):
     pss_score = Column(Integer, nullable=False)
     overall_level = Column(String, nullable=False)
     answers_json = Column(Text, nullable=True)
-    taken_at = Column(DateTime, default=datetime.datetime.utcnow, index=True)
+    taken_at = Column(DateTime, default=lambda: datetime.datetime.now(datetime.timezone.utc), index=True)
 
     user = relationship("User", back_populates="assessments")
 
@@ -58,7 +58,7 @@ class ActivityLog(Base):
     activity_type = Column(String, nullable=False)
     duration_minutes = Column(Integer, nullable=False)
     description = Column(Text, nullable=True)
-    logged_at = Column(DateTime, default=datetime.datetime.utcnow, index=True)
+    logged_at = Column(DateTime, default=lambda: datetime.datetime.now(datetime.timezone.utc), index=True)
 
     user = relationship("User", back_populates="activities")
 
@@ -69,7 +69,7 @@ class ChatMessage(Base):
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
     role = Column(String, nullable=False)
     content = Column(Text, nullable=False)
-    sent_at = Column(DateTime, default=datetime.datetime.utcnow, index=True)
+    sent_at = Column(DateTime, default=lambda: datetime.datetime.now(datetime.timezone.utc), index=True)
 
     user = relationship("User", back_populates="messages")
 
@@ -82,7 +82,7 @@ class AllyConnection(Base):
     ally_email = Column(String, nullable=False)
     role = Column(String, nullable=False)
     is_verified = Column(Boolean, default=False)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.datetime.now(datetime.timezone.utc))
 
     student = relationship("User", back_populates="allies")
     nudges = relationship("AllyNudge", back_populates="connection", cascade="all, delete-orphan")
@@ -92,7 +92,7 @@ class AllyNudge(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     connection_id = Column(Integer, ForeignKey("ally_connections.id"), nullable=False, index=True)
-    generated_at = Column(DateTime, default=datetime.datetime.utcnow, index=True)
+    generated_at = Column(DateTime, default=lambda: datetime.datetime.now(datetime.timezone.utc), index=True)
     insight_summary = Column(Text, nullable=False)
     actionable_tip = Column(Text, nullable=False)
     is_viewed = Column(Boolean, default=False)

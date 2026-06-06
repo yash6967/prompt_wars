@@ -3,14 +3,12 @@ from backend import models
 
 def calculate_wellness_summary(user_id: int, db: Session) -> dict:
     moods = db.query(models.MoodEntry).filter(models.MoodEntry.user_id == user_id).order_by(models.MoodEntry.logged_at.desc()).limit(14).all()
-    assessments = db.query(models.AssessmentResult).filter(models.AssessmentResult.user_id == user_id).order_by(models.AssessmentResult.taken_at.desc()).all()
+    latest_assessment = db.query(models.AssessmentResult).filter(models.AssessmentResult.user_id == user_id).order_by(models.AssessmentResult.taken_at.desc()).first()
     
     avg_mood = sum(m.mood_score for m in moods) / len(moods) if moods else 0.0
     avg_energy = sum(m.energy_level for m in moods if m.energy_level is not None) / len([m for m in moods if m.energy_level is not None]) if any(m.energy_level is not None for m in moods) else 0.0
     avg_sleep = sum(m.sleep_hours for m in moods if m.sleep_hours is not None) / len([m for m in moods if m.sleep_hours is not None]) if any(m.sleep_hours is not None for m in moods) else 0.0
     avg_study = sum(m.study_hours for m in moods if m.study_hours is not None) / len([m for m in moods if m.study_hours is not None]) if any(m.study_hours is not None for m in moods) else 0.0
-    
-    latest_assessment = assessments[0] if assessments else None
     
     return {
         "avg_mood_14d": round(avg_mood, 2),

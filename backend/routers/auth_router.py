@@ -8,6 +8,32 @@ router = APIRouter()
 
 @router.post("/register", response_model=schemas.Token)
 def register(user_in: schemas.UserCreate, db: Session = Depends(get_db)):
+    # Input sanitization
+    name_stripped = user_in.name.strip()
+    if not name_stripped:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Name cannot be empty or blank",
+        )
+        
+    # Password complexity checks
+    password = user_in.password
+    if len(password) < 8:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Password must be at least 8 characters long",
+        )
+    if not any(char.isdigit() for char in password):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Password must contain at least one digit",
+        )
+    if not any(not char.isalnum() for char in password):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Password must contain at least one special character",
+        )
+
     db_user = db.query(models.User).filter(models.User.email == user_in.email).first()
     if db_user:
         raise HTTPException(
@@ -15,9 +41,9 @@ def register(user_in: schemas.UserCreate, db: Session = Depends(get_db)):
             detail="Email already registered",
         )
     
-    hashed_password = auth.get_password_hash(user_in.password)
+    hashed_password = auth.get_password_hash(password)
     new_user = models.User(
-        name=user_in.name,
+        name=name_stripped,
         email=user_in.email,
         hashed_password=hashed_password,
         exam_target=user_in.exam_target,

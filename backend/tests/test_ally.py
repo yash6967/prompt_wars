@@ -6,7 +6,7 @@ def auth_headers(client):
     reg_payload = {
         "name": "Student User",
         "email": "student@saathi.com",
-        "password": "mypassword",
+        "password": "SecurePass123!",
         "exam_target": "Boards"
     }
     reg_res = client.post("/auth/register", json=reg_payload)
