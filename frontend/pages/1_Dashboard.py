@@ -72,6 +72,10 @@ if history_res and history_res.status_code == 200:
         
         st.subheader("📈 Wellness Trends Over Time")
         
+        is_dark = st.session_state.get("theme_mode", "Light") == "Dark"
+        chart_template = "plotly_dark" if is_dark else "simple_white"
+        chart_font = "#FAF4EE" if is_dark else "#2C2724"
+
         fig = px.line(
             df, 
             x="logged_at", 
@@ -80,7 +84,7 @@ if history_res and history_res.status_code == 200:
             title="Mood & Energy Trajectory",
             color_discrete_sequence=["#8E95D3", "#94B5A6"]
         )
-        fig.update_layout(template="simple_white", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', font_color="#2C2724")
+        fig.update_layout(template=chart_template, paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', font_color=chart_font)
         st.plotly_chart(fig, use_container_width=True)
         
         col_left, col_right = st.columns(2)
@@ -92,7 +96,7 @@ if history_res and history_res.status_code == 200:
                 title="Sleep Hours per Day",
                 color_discrete_sequence=["#E5C672"]
             )
-            fig_sleep.update_layout(template="simple_white", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', font_color="#2C2724")
+            fig_sleep.update_layout(template=chart_template, paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', font_color=chart_font)
             st.plotly_chart(fig_sleep, use_container_width=True)
             
         with col_right:
@@ -103,7 +107,7 @@ if history_res and history_res.status_code == 200:
                 title="Study Hours per Day",
                 color_discrete_sequence=["#94B5A6"]
             )
-            fig_study.update_layout(template="simple_white", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', font_color="#2C2724")
+            fig_study.update_layout(template=chart_template, paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', font_color=chart_font)
             st.plotly_chart(fig_study, use_container_width=True)
             
         st.markdown("<br>", unsafe_allow_html=True)
