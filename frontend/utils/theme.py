@@ -1,21 +1,33 @@
 import streamlit as st
 
 def setup_page_theme():
-    # Initialize session state for theme
+    # Initialize session state for theme and language
     if "theme_mode" not in st.session_state:
         st.session_state["theme_mode"] = "Light"
+    if "language" not in st.session_state:
+        st.session_state["language"] = "English"
         
     # Render toggle in sidebar
     with st.sidebar:
         st.markdown("<br>", unsafe_allow_html=True)
         theme_mode = st.radio(
-            "🌓 Theme Mode",
+            "🌓 Theme Mode / थीम मोड",
             ["Light", "Dark"],
             index=0 if st.session_state["theme_mode"] == "Light" else 1,
             help="Switch between soft cream light mode and high contrast dark mode."
         )
         if theme_mode != st.session_state["theme_mode"]:
             st.session_state["theme_mode"] = theme_mode
+            st.rerun()
+            
+        language = st.selectbox(
+            "🌐 Language / भाषा",
+            ["English", "Hindi (हिन्दी)"],
+            index=0 if st.session_state["language"] == "English" else 1,
+            help="Select display language for wellness tracker page."
+        )
+        if language != st.session_state["language"]:
+            st.session_state["language"] = language
             st.rerun()
             
     is_dark = st.session_state["theme_mode"] == "Dark"
