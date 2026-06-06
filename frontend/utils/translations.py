@@ -199,3 +199,33 @@ def t(key):
     lang = st.session_state.get("language", "English")
     return TRANSLATIONS.get(lang, TRANSLATIONS["English"]).get(key, key)
 
+from babel.dates import format_date, format_datetime
+from datetime import datetime
+
+def fd(date_val, format="medium"):
+    if isinstance(date_val, str):
+        try:
+            # Handle possible ISO formats
+            date_val = datetime.fromisoformat(date_val.replace("Z", "+00:00"))
+        except ValueError:
+            return date_val
+    lang = st.session_state.get("language", "English")
+    locale = "hi" if lang == "Hindi (हिन्दी)" else "en"
+    try:
+        return format_date(date_val, format=format, locale=locale)
+    except Exception:
+        return str(date_val)
+
+def fdt(datetime_val, format="medium"):
+    if isinstance(datetime_val, str):
+        try:
+            datetime_val = datetime.fromisoformat(datetime_val.replace("Z", "+00:00"))
+        except ValueError:
+            return datetime_val
+    lang = st.session_state.get("language", "English")
+    locale = "hi" if lang == "Hindi (हिन्दी)" else "en"
+    try:
+        return format_datetime(datetime_val, format=format, locale=locale)
+    except Exception:
+        return str(datetime_val)
+

@@ -8,6 +8,7 @@ from datetime import datetime
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 
 from frontend.utils import session, api_client, theme
+from frontend.utils.translations import fd, fdt
 
 st.set_page_config(page_title="Exam Calendar — Saathi", layout="wide")
 theme.setup_page_theme()
@@ -46,10 +47,10 @@ if all_res and all_res.status_code == 200:
             is_target = target_exam and target_exam.lower() in exam["name"].lower()
             card_class = "card-gold" if is_target else card_styles[idx % len(card_styles)]
             
-            # Formatted dates
-            exam_date = datetime.fromisoformat(exam["date"]).strftime("%B %d, %Y - %I:%M %p")
-            reg_start = datetime.fromisoformat(exam["registration_start"]).strftime("%b %d, %Y")
-            reg_end = datetime.fromisoformat(exam["registration_end"]).strftime("%b %d, %Y")
+            # Formatted dates using Babel localization
+            exam_date = fdt(exam["date"], format="medium")
+            reg_start = fd(exam["registration_start"], format="medium")
+            reg_end = fd(exam["registration_end"], format="medium")
             
             st.markdown(
                 f"""
@@ -68,15 +69,23 @@ if all_res and all_res.status_code == 200:
     st.markdown("---")
     
     # Render all exams in a comprehensive Table
-    st.header("📊 Complete Exam Directory")
+    title_lbl = "📊 परीक्षा निर्देशिका" if st.session_state.get("language") == "Hindi (हिन्दी)" else "📊 Complete Exam Directory"
+    st.header(title_lbl)
     df_data = []
+    
+    exam_name_lbl = "परीक्षा का नाम" if st.session_state.get("language") == "Hindi (हिन्दी)" else "Exam Name"
+    exam_date_lbl = "परीक्षा की तारीख" if st.session_state.get("language") == "Hindi (हिन्दी)" else "Exam Date"
+    reg_start_lbl = "पंजीकरण शुरू" if st.session_state.get("language") == "Hindi (हिन्दी)" else "Registration Starts"
+    reg_end_lbl = "पंजीकरण की अंतिम तिथि" if st.session_state.get("language") == "Hindi (हिन्दी)" else "Registration Deadline"
+    portal_lbl = "आधिकारिक पोर्टल" if st.session_state.get("language") == "Hindi (हिन्दी)" else "Official Portal"
+
     for exam in all_exams:
         df_data.append({
-            "Exam Name": exam["name"],
-            "Exam Date": datetime.fromisoformat(exam["date"]).strftime("%Y-%m-%d"),
-            "Registration Starts": datetime.fromisoformat(exam["registration_start"]).strftime("%Y-%m-%d"),
-            "Registration Deadline": datetime.fromisoformat(exam["registration_end"]).strftime("%Y-%m-%d"),
-            "Official Portal": exam["info_link"]
+            exam_name_lbl: exam["name"],
+            exam_date_lbl: fd(exam["date"]),
+            reg_start_lbl: fd(exam["registration_start"]),
+            reg_end_lbl: fd(exam["registration_end"]),
+            portal_lbl: exam["info_link"]
         })
     df = pd.DataFrame(df_data)
     st.dataframe(df, use_container_width=True, hide_index=True)
