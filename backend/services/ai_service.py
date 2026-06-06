@@ -1,4 +1,5 @@
 import anthropic
+import httpx
 from backend.config import settings
 
 def get_anthropic_client():
@@ -10,9 +11,38 @@ def get_anthropic_client():
     except Exception:
         return None
 
-def generate_story(student_name: str, exam_target: str, mood_score: int) -> str:
-    client = get_anthropic_client()
+def call_groq_api(messages: list, system_prompt: str = None) -> str:
+    key = settings.GROQ_API_key
+    if not key or key == "your-groq-api-key" or "your" in key.lower():
+        return None
     
+    url = "https://api.groq.com/openai/v1/chat/completions"
+    headers = {
+        "Authorization": f"Bearer {key}",
+        "Content-Type": "application/json"
+    }
+    
+    payload_messages = []
+    if system_prompt:
+        payload_messages.append({"role": "system", "content": system_prompt})
+    
+    payload_messages.extend(messages)
+    
+    payload = {
+        "model": "llama-3.3-70b-versatile",
+        "messages": payload_messages,
+        "temperature": 0.7
+    }
+    
+    try:
+        response = httpx.post(url, headers=headers, json=payload, timeout=15)
+        if response.status_code == 200:
+            return response.json()["choices"][0]["message"]["content"]
+    except Exception:
+        pass
+    return None
+
+def generate_story(student_name: str, exam_target: str, mood_score: int) -> str:
     mood_str = "struggling" if mood_score <= 4 else "doing okay" if mood_score <= 7 else "motivated"
     fallback_text = (
         f"Chapter 1: The Choice\n"
@@ -26,28 +56,34 @@ def generate_story(student_name: str, exam_target: str, mood_score: int) -> str:
         f"{student_name} was ready to face the challenges. The {exam_target} exam was no longer an adversary, but a stepping stone."
     )
     
-    if not client:
-        return fallback_text
-        
-    try:
-        prompt = (
-            f"Write a relatable, inspiring 3-chapter short story about a student named {student_name} "
-            f"preparing for {exam_target} who is currently feeling {mood_str} (mood score: {mood_score}/10). "
-            f"Make it encouraging and highlight the importance of balancing mental wellness and study."
-        )
-        message = client.messages.create(
-            model="claude-3-5-sonnet-20241022",
-            max_tokens=1000,
-            temperature=0.7,
-            messages=[{"role": "user", "content": prompt}]
-        )
-        return message.content[0].text
-    except Exception:
-        return fallback_text
+    prompt = (
+        f"Write a relatable, inspiring 3-chapter short story about a student named {student_name} "
+        f"preparing for {exam_target} who is currently feeling {mood_str} (mood score: {mood_score}/10). "
+        f"Make it encouraging and highlight the importance of balancing mental wellness and study."
+    )
+
+    # 1. Try Anthropic
+    anthropic_client = get_anthropic_client()
+    if anthropic_client:
+        try:
+            message = anthropic_client.messages.create(
+                model="claude-3-5-sonnet-20241022",
+                max_tokens=1000,
+                temperature=0.7,
+                messages=[{"role": "user", "content": prompt}]
+            )
+            return message.content[0].text
+        except Exception:
+            pass
+
+    # 2. Try Groq fallback
+    groq_response = call_groq_api([{"role": "user", "content": prompt}])
+    if groq_response:
+        return groq_response
+
+    return fallback_text
 
 def chat_with_student(history: list, student_name: str) -> str:
-    client = get_anthropic_client()
-    
     safety_info = (
         "\n\n[Safety Notice: If you are experiencing overwhelming stress, please reach out to AASRA (91-9820466726) "
         "or Kiran Mental Health Helpline (1800-599-0019) for 24/7 confidential support.]"
@@ -80,35 +116,37 @@ def chat_with_student(history: list, student_name: str) -> str:
         
     fallback_text += safety_info
     
-    if not client:
-        return fallback_text
-        
-    try:
-        system_prompt = (
-            f"You are Saathi, an empathetic AI mental wellness co-pilot for a student named {student_name}. "
-            f"Provide supportive, non-clinical listening. "
-            f"CRITICAL: If the student exhibits extreme distress, self-harm, or suicidal ideation, "
-            f"you must provide safety helpline information: AASRA (91-9820466726) and Kiran (1800-599-0019) immediately."
-        )
-        
-        formatted_messages = []
-        for h in history:
-            formatted_messages.append({"role": h["role"], "content": h["content"]})
-            
-        message = client.messages.create(
-            model="claude-3-5-sonnet-20241022",
-            max_tokens=800,
-            temperature=0.7,
-            system=system_prompt,
-            messages=formatted_messages
-        )
-        return message.content[0].text
-    except Exception:
-        return fallback_text
+    system_prompt = (
+        f"You are Saathi, an empathetic AI mental wellness co-pilot for a student named {student_name}. "
+        f"Provide supportive, non-clinical listening. "
+        f"CRITICAL: If the student exhibits extreme distress, self-harm, or suicidal ideation, "
+        f"you must provide safety helpline information: AASRA (91-9820466726) and Kiran (1800-599-0019) immediately."
+    )
+
+    # 1. Try Anthropic
+    anthropic_client = get_anthropic_client()
+    if anthropic_client:
+        try:
+            formatted_messages = [{"role": h["role"], "content": h["content"]} for h in history]
+            message = anthropic_client.messages.create(
+                model="claude-3-5-sonnet-20241022",
+                max_tokens=800,
+                temperature=0.7,
+                system=system_prompt,
+                messages=formatted_messages
+            )
+            return message.content[0].text
+        except Exception:
+            pass
+
+    # 2. Try Groq fallback
+    groq_response = call_groq_api(history, system_prompt=system_prompt)
+    if groq_response:
+        return groq_response
+
+    return fallback_text
 
 def generate_subtle_ally_nudge(student_name: str, avg_mood: float, avg_energy: float, recent_note: str) -> str:
-    client = get_anthropic_client()
-    
     mood_desc = "elevated stress levels" if avg_mood < 5 else "moderate stress" if avg_mood < 7 else "generally stable emotional state"
     energy_desc = "low energy" if avg_energy < 5 else "moderate energy" if avg_energy < 7 else "good energy"
     
@@ -122,22 +160,30 @@ def generate_subtle_ally_nudge(student_name: str, avg_mood: float, avg_energy: f
         f"3. Offer reassurance that their effort and health are valued above all else."
     )
     
-    if not client:
-        return fallback_text
-        
-    try:
-        prompt = (
-            f"Create a subtle, non-alarmist, privacy-first nudge/tip card for the parent or teacher of a student named {student_name}. "
-            f"The student's current average mood score is {avg_mood}/10 ({mood_desc}) and energy level is {avg_energy}/10 ({energy_desc}). "
-            f"Do NOT mention any specific numerical scores or share private journals. "
-            f"Provide exactly 2-3 supportive, concrete actions the adult can take to support the student's well-being."
-        )
-        message = client.messages.create(
-            model="claude-3-5-sonnet-20241022",
-            max_tokens=500,
-            temperature=0.7,
-            messages=[{"role": "user", "content": prompt}]
-        )
-        return message.content[0].text
-    except Exception:
-        return fallback_text
+    prompt = (
+        f"Create a subtle, non-alarmist, privacy-first nudge/tip card for the parent or teacher of a student named {student_name}. "
+        f"The student's current average mood score is {avg_mood}/10 ({mood_desc}) and energy level is {avg_energy}/10 ({energy_desc}). "
+        f"Do NOT mention any specific numerical scores or share private journals. "
+        f"Provide exactly 2-3 supportive, concrete actions the adult can take to support the student's well-being."
+    )
+
+    # 1. Try Anthropic
+    anthropic_client = get_anthropic_client()
+    if anthropic_client:
+        try:
+            message = anthropic_client.messages.create(
+                model="claude-3-5-sonnet-20241022",
+                max_tokens=500,
+                temperature=0.7,
+                messages=[{"role": "user", "content": prompt}]
+            )
+            return message.content[0].text
+        except Exception:
+            pass
+
+    # 2. Try Groq fallback
+    groq_response = call_groq_api([{"role": "user", "content": prompt}])
+    if groq_response:
+        return groq_response
+
+    return fallback_text

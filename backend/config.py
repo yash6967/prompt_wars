@@ -7,6 +7,7 @@ class Settings(BaseSettings):
     DATABASE_URL: str = "sqlite:///./data/saathi.db"
     ANTHROPIC_API_KEY: str = ""
     BACKEND_URL: str = "http://localhost:8000"
+    GROQ_API_key: str = ""
 
     class Config:
         env_file = ".env"
