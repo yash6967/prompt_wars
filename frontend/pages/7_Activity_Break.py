@@ -23,7 +23,7 @@ st.markdown("Taking regular breaks improves memory retention and keeps burnout a
 advice_res = api_client.request("GET", "activity/advice")
 if advice_res and advice_res.status_code == 200:
     advice = advice_res.json()
-    st.subheader("💡 Why Breaks Matter")
+    st.header("💡 Why Breaks Matter")
     col1, col2, col3 = st.columns(3)
     
     advice_items = list(advice.items())
@@ -43,7 +43,7 @@ st.markdown("---")
 col_timer, col_log = st.columns(2)
 
 with col_timer:
-    st.subheader("⏱️ Quick Break Timer")
+    st.header("⏱️ Quick Break Timer")
     timer_type = st.selectbox("Choose break type:", ["Hydration Break (2 min)", "Breathing Exercise (5 min)", "Short Walk (10 min)", "Meditation (15 min)"], help="Select a type of active break to start a visual countdown timer.")
     
     duration_map = {
@@ -95,7 +95,7 @@ with col_timer:
             st.rerun()
 
 with col_log:
-    st.subheader("📝 Log a Break Manually")
+    st.header("📝 Log a Break Manually")
     with st.form("manual_break_form"):
         activity_type = st.selectbox(
             "What activity did you do?",
@@ -125,7 +125,7 @@ st.markdown("---")
 today_res = api_client.request("GET", "activity/today")
 if today_res and today_res.status_code == 200:
     today_data = today_res.json()
-    st.subheader(f"📊 Your Recovery Statistics for Today")
+    st.header(f"📊 Your Recovery Statistics for Today")
     st.markdown(f"⚡ **Total Recovery Time:** {today_data.get('total_duration_minutes', 0)} minutes across **{today_data.get('count', 0)}** breaks.")
     
     if today_data.get("activities"):

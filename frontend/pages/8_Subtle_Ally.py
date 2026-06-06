@@ -28,7 +28,7 @@ st.markdown(
 tab1, tab2 = st.tabs(["Link Trusted Ally", "Care Cards & Insights"])
 
 with tab1:
-    st.subheader("Add a Supportive Guide")
+    st.header("Add a Supportive Guide")
     st.markdown("Invite a mentor, guardian, or parent to receive wellness indicators.")
     
     with st.form("invite_ally_form"):
@@ -54,7 +54,7 @@ with tab1:
                     st.error("Failed to link ally connection.")
 
     st.markdown("---")
-    st.subheader("👥 Your Linked Allies")
+    st.header("👥 Your Linked Allies")
     with st.spinner("Loading connections..."):
         conn_res = api_client.request("GET", "ally/connections")
         if conn_res and conn_res.status_code == 200:
@@ -74,7 +74,7 @@ with tab1:
                 st.info("You haven't linked any helpers yet. Add one above to create a support circle!")
 
 with tab2:
-    st.subheader("📋 Sent Care Cards Preview")
+    st.header("📋 Sent Care Cards Preview")
     st.markdown("Here are the privacy-first care cards generated for your allies based on your wellness trends:")
     
     with st.spinner("Retrieving nudges..."):
@@ -87,7 +87,7 @@ with tab2:
                     st.markdown(
                         f"""
                         <div class="card-gold">
-                            <h5 style="margin-top: 0;">Care Card (Sent {nudge_time})</h5>
+                            <h3 style="margin-top: 0; font-size: 1.25rem;">Care Card (Sent {nudge_time})</h3>
                             <p><b>Insight Summary:</b> {nudge['insight_summary']}</p>
                             <p style="background: rgba(255,255,255,0.4); padding: 12px; border-radius: 12px; border: 1px dashed rgba(44, 39, 36, 0.2);">
                                 💡 <b>Actionable Tip for Ally:</b> {nudge['actionable_tip']}

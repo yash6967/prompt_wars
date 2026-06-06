@@ -39,7 +39,7 @@ if all_res and all_res.status_code == 200:
     upcoming_exams = upcoming_res.json() if upcoming_res and upcoming_res.status_code == 200 else []
     
     # Render Upcoming Exams List
-    st.subheader(f"⏳ Upcoming Exams in next {days_filter} days")
+    st.header(f"⏳ Upcoming Exams in next {days_filter} days")
     if upcoming_exams:
         card_styles = ["card-lavender", "card-sage"]
         for idx, exam in enumerate(upcoming_exams):
@@ -57,7 +57,7 @@ if all_res and all_res.status_code == 200:
                     <h4 style="margin: 0;">{exam['name']} {'⭐ (Your Target)' if is_target else ''}</h4>
                     <p style="margin: 5px 0;">📅 <b>Exam Date:</b> {exam_date}</p>
                     <p style="margin: 5px 0; font-size: 0.9rem;">📝 <b>Registration Window:</b> {reg_start} to {reg_end}</p>
-                    <a href="{exam['info_link']}" target="_blank" style="color: #2C2724; text-decoration: underline; font-weight: bold;">Official Registration Link ↗</a>
+                    <a href="{exam['info_link']}" target="_blank" style="color: inherit; text-decoration: underline; font-weight: bold;">Official Registration Link ↗</a>
                 </div>
                 """,
                 unsafe_allow_html=True
@@ -68,7 +68,7 @@ if all_res and all_res.status_code == 200:
     st.markdown("---")
     
     # Render all exams in a comprehensive Table
-    st.subheader("📊 Complete Exam Directory")
+    st.header("📊 Complete Exam Directory")
     df_data = []
     for exam in all_exams:
         df_data.append({

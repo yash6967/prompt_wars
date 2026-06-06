@@ -27,7 +27,7 @@ if escalation_res and escalation_res.status_code == 200:
         st.markdown(
             """
             <div class="card-rose">
-                <h3 style="color: #2C2724; margin-top: 0;">🚨 Urgent: Student Safety Escalation Active</h3>
+                <h3 style="color: inherit; margin-top: 0;">🚨 Urgent: Student Safety Escalation Active</h3>
                 <p>Recent self-reports or stress indicators suggest you are experiencing extremely high pressure or distress.</p>
                 <p><b>Reasons flagged:</b></p>
                 <ul>
@@ -70,7 +70,7 @@ if history_res and history_res.status_code == 200:
         df["logged_at"] = pd.to_datetime(df["logged_at"])
         df = df.sort_values(by="logged_at")
         
-        st.subheader("📈 Wellness Trends Over Time")
+        st.header("📈 Wellness Trends Over Time")
         
         is_dark = st.session_state.get("theme_mode", "Light") == "Dark"
         chart_template = "plotly_dark" if is_dark else "simple_white"

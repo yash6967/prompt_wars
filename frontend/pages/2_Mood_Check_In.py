@@ -23,7 +23,7 @@ with st.form("check_in_form"):
     sleep_hours = st.number_input("How many hours did you sleep last night?", min_value=0.0, max_value=24.0, value=7.0, step=0.5, help="Enter the approximate number of hours of sleep you had last night.")
     study_hours = st.number_input("How many hours did you study today?", min_value=0.0, max_value=24.0, value=4.0, step=0.5, help="Enter the total hours spent studying today.")
     
-    st.markdown("##### Emotion Tags")
+    st.markdown("### Emotion Tags")
     options = ["Anxious", "Stressed", "Calm", "Tired", "Motivated", "Bored", "Focused", "Happy", "Overwhelmed", "Excited"]
     selected_tags = st.multiselect("Select emotions matching your current state:", options, help="Select one or more emotion tags that describe your mood.")
     

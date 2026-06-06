@@ -62,7 +62,7 @@ with st.form("assessment_form"):
     pss_questions = [q for q in questions if q["category"] == "PSS"]
     
     if phq_questions:
-        st.subheader("Section 1: General Mood & Wellness (PHQ-9)")
+        st.header("Section 1: General Mood & Wellness (PHQ-9)")
         st.caption("Over the last 2 weeks, how often have you been bothered by any of the following problems?")
         for q in phq_questions:
             ans = st.radio(
@@ -77,7 +77,7 @@ with st.form("assessment_form"):
             
     if gad_questions:
         st.markdown("---")
-        st.subheader("Section 2: Anxiety & Stress Response (GAD-7)")
+        st.header("Section 2: Anxiety & Stress Response (GAD-7)")
         st.caption("Over the last 2 weeks, how often have you been bothered by any of the following problems?")
         for q in gad_questions:
             ans = st.radio(
@@ -92,7 +92,7 @@ with st.form("assessment_form"):
 
     if pss_questions:
         st.markdown("---")
-        st.subheader("Section 3: Perceived Coping & Pressures (PSS-4)")
+        st.header("Section 3: Perceived Coping & Pressures (PSS-4)")
         st.caption("In the last month, how often have you felt...")
         for q in pss_questions:
             ans = st.radio(

@@ -163,6 +163,16 @@ def setup_page_theme():
             border-radius: 12px !important;
         }}
         
+        /* Accessibility: High-contrast focus rings for inputs, buttons, and custom controls */
+        .stTextInput input:focus, .stPasswordInput input:focus, .stNumberInput input:focus, .stTextArea textarea:focus,
+        div[data-baseweb="select"]:focus-within, div[data-baseweb="input"]:focus-within, textarea[data-baseweb="textarea"]:focus,
+        div.stButton > button:focus, div.stButton > button:focus-visible,
+        .stSlider > div:focus-within, [role="radio"]:focus, [role="checkbox"]:focus {{
+            outline: 3px solid #4D96FF !important;
+            outline-offset: 2px !important;
+            box-shadow: 0 0 0 3px rgba(77, 150, 255, 0.4) !important;
+        }}
+        
         /* Form borders customization */
         div[data-testid="stForm"] {{
             border: 1px solid {border_color} !important;

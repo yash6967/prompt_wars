@@ -18,7 +18,7 @@ st.title("📚 Lifelines & Wellness Resources")
 st.markdown("You do not have to navigate the stress of preparation alone. Keep these resources and wellness guides handy.")
 
 # Critical Helplines Section
-st.subheader("🚨 Emergency Mental Health Support")
+st.header("🚨 Emergency Mental Health Support")
 st.markdown("If you are feeling extremely overwhelmed, anxious, or hopeless, please connect with a counselor immediately. They are confidential, free, and available 24/7.")
 
 col1, col2 = st.columns(2)
@@ -26,7 +26,7 @@ with col1:
     st.markdown(
         """
         <div class="card-rose">
-            <h4 style="margin: 0;">🇮🇳 AASRA Helpline</h4>
+            <h3 style="margin: 0; font-size: 1.25rem;">🇮🇳 AASRA Helpline</h3>
             <p style="margin: 10px 0 0 0; font-size: 1.1rem;">📞 <b>+91-9820466726</b></p>
             <p style="margin: 5px 0 0 0; font-size: 0.9rem;">24/7 Free & Confidential Professional Support</p>
         </div>
@@ -37,7 +37,7 @@ with col2:
     st.markdown(
         """
         <div class="card-rose">
-            <h4 style="margin: 0;">🇮🇳 Kiran Mental Health Helpline</h4>
+            <h3 style="margin: 0; font-size: 1.25rem;">🇮🇳 Kiran Mental Health Helpline</h3>
             <p style="margin: 10px 0 0 0; font-size: 1.1rem;">📞 <b>1800-599-0019</b></p>
             <p style="margin: 5px 0 0 0; font-size: 0.9rem;">Government of India - 24/7 Mental Health Care Line</p>
         </div>
@@ -48,7 +48,7 @@ with col2:
 st.markdown("---")
 
 # Prep Wellness habits Section
-st.subheader("💡 Healthy preparation habits")
+st.header("💡 Healthy preparation habits")
 
 col_habit1, col_habit2, col_habit3 = st.columns(3)
 
@@ -56,7 +56,7 @@ with col_habit1:
     st.markdown(
         """
         <div class="card-lavender">
-            <h4>🧠 Study Smart (Pomodoro)</h4>
+            <h3 style="font-size: 1.25rem; margin-top: 0;">🧠 Study Smart (Pomodoro)</h3>
             <p>Don't sit for hours without rising. Divide study times into blocks:</p>
             <ul>
                 <li>Study without distractions for 25 minutes.</li>
@@ -72,7 +72,7 @@ with col_habit2:
     st.markdown(
         """
         <div class="card-gold">
-            <h4>💤 Sleep is Memory consolidation</h4>
+            <h3 style="font-size: 1.25rem; margin-top: 0;">💤 Sleep is Memory consolidation</h3>
             <p>Sacrificing sleep for studying reduces retention performance:</p>
             <ul>
                 <li>Aim for 7 to 8 hours of sleep per night.</li>
@@ -88,7 +88,7 @@ with col_habit3:
     st.markdown(
         """
         <div class="card-sage">
-            <h4>💬 Share the Load</h4>
+            <h3 style="font-size: 1.25rem; margin-top: 0;">💬 Share the Load</h3>
             <p>Do not isolate yourself during your preparation weeks:</p>
             <ul>
                 <li>Spend 15-20 minutes daily talking to a trusted sibling, parent, or friend.</li>
@@ -101,7 +101,7 @@ with col_habit3:
     )
 
 st.markdown("---")
-st.subheader("📚 External Wellness Articles")
+st.header("📚 External Wellness Articles")
 st.markdown("- [Dealing with Exam Stress and Anxiety](https://www.unicef.org/india/stories/dealing-exam-stress-and-anxiety)")
 st.markdown("- [The Science of Taking Breaks](https://www.psychologytoday.com/us/blog/the-brain-and-behavior/202111/the-science-taking-breaks)")
 st.markdown("- [Healthy Eating and Hydration Guides for Students](https://www.nutrition.org.uk/healthy-sustainable-diets/life-stages/students/)")
